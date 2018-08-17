@@ -1,4 +1,4 @@
-package nsqtrigger
+package flogonsqtrigger
 
 import (
 	"context"
@@ -9,9 +9,7 @@ import (
 	nsq "github.com/nsqio/go-nsq"
 )
 
-var log = logger.GetLogger("trigger-flogo-nsqtrigger")
-
-type CreateHandler struct{}
+var log = logger.GetLogger("trigger-flogo-flogonsqtrigger")
 
 // NsqTrigger is NSQ message trigger
 type NsqTrigger struct {
