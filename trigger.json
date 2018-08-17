@@ -1,0 +1,27 @@
+{
+  "name": "nsqtrigger",
+  "type": "flogo:trigger",
+  "ref": "https://github.com/abasse/flogonsqtrigger",
+  "version": "0.0.1",
+  "title": "Receive NSQ Messages",
+  "description": "NSQ Message Trigger",
+  "output": [
+    {
+      "name": "message",
+      "type": "string"
+    }
+  ],
+  "handler": {
+    "settings": [{
+      "name": "NsqlookupdAddress",
+      "type": "string",
+	    "required":"true"
+    },
+    {
+      "name": "Topic",
+      "type": "string",
+	    "required":"true"
+    }
+    ]
+  }
+}
