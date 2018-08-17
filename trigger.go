@@ -48,33 +48,29 @@ func (t *NsqTrigger) Initialize(ctx trigger.InitContext) error {
 // Start implements ext.Trigger.Start
 func (t *NsqTrigger) Start() error {
 
-	fmt.Printf("Starting NSQ trigger...")
 	handlers := t.handlers
 
 	for _, handler := range handlers {
 
 		nsqlds := handler.GetStringSetting("NsqlookupdAddress")
 		topic := handler.GetStringSetting("Topic")
+		channel := handler.GetStringSetting("Channel")
 
-		fmt.Println("Starting NSQ Consumer.")
-
-		//createConsumer, err := NewConsumer(topic, topic, &CreateHandler{})
 		config := nsq.NewConfig()
-		q, err := nsq.NewConsumer(topic, "ch_"+topic, config)
+		q, err := nsq.NewConsumer(topic, channel, config)
 		q.AddHandler(nsq.HandlerFunc(func(message *nsq.Message) error {
-			//log.Info("Got a message: %v", message)
 			t.RunHandler(handler, string(message.Body))
 			return nil
 		}))
 
 		if err != nil {
-			log.Info("Could not add consumer: %s", err)
+			log.Info("Could not add NSQ consumer: %s", err)
 		}
 
 		// NSQLookupd addresses
 		err = q.ConnectToNSQLookupd(nsqlds)
 		if err != nil {
-			log.Info("Could not connect")
+			log.Info("Could not connect to NSQ")
 		}
 	}
 	return nil
@@ -82,7 +78,7 @@ func (t *NsqTrigger) Start() error {
 
 // Stop implements ext.Trigger.Stop
 func (t *NsqTrigger) Stop() error {
-	fmt.Printf("Stopping NSQ..")
+	fmt.Printf("Stopping NSQ...")
 	return nil
 }
 
@@ -98,6 +94,6 @@ func (t *NsqTrigger) RunHandler(handler *trigger.Handler, payload string) {
 		fmt.Printf("Error starting action: ", err.Error())
 	}
 
-	fmt.Printf("Ran Handler: [%s]", handler)
+	//fmt.Printf("Ran Handler: [%s]", handler)
 
 }

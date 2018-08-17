@@ -22,6 +22,11 @@
       "name": "Topic",
       "type": "string",
 	    "required":"true"
+    },
+    {
+      "name": "Channel",
+      "type": "string",
+	    "required":"true"
     }
     ]
   }
