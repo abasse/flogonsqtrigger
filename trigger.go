@@ -62,7 +62,7 @@ func (t *NsqTrigger) Start() error {
 		config := nsq.NewConfig()
 		q, err := nsq.NewConsumer(topic, "ch_"+topic, config)
 		q.AddHandler(nsq.HandlerFunc(func(message *nsq.Message) error {
-			log.Info("Got a message: %v", message)
+			//log.Info("Got a message: %v", message)
 			t.RunHandler(handler, string(message.Body))
 			return nil
 		}))
@@ -82,7 +82,6 @@ func (t *NsqTrigger) Start() error {
 
 // Stop implements ext.Trigger.Stop
 func (t *NsqTrigger) Stop() error {
-
 	fmt.Printf("Stopping NSQ..")
 	return nil
 }
