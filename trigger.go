@@ -13,9 +13,10 @@ var log = logger.GetLogger("trigger-flogo-flogonsqtrigger")
 
 // NsqTrigger is NSQ message trigger
 type NsqTrigger struct {
-	metadata *trigger.Metadata
-	config   *trigger.Config
-	handlers []*trigger.Handler
+	metadata  *trigger.Metadata
+	config    *trigger.Config
+	handlers  []*trigger.Handler
+	consumers []*nsq.Consumer
 }
 
 //NewFactory create a new Trigger factory
@@ -58,6 +59,7 @@ func (t *NsqTrigger) Start() error {
 
 		config := nsq.NewConfig()
 		q, err := nsq.NewConsumer(topic, channel, config)
+		t.consumers = append(t.consumers, q)
 		q.AddHandler(nsq.HandlerFunc(func(message *nsq.Message) error {
 			t.RunHandler(handler, string(message.Body))
 			return nil
@@ -79,6 +81,9 @@ func (t *NsqTrigger) Start() error {
 // Stop implements ext.Trigger.Stop
 func (t *NsqTrigger) Stop() error {
 	fmt.Printf("Stopping NSQ...")
+	for _, q := range t.consumers {
+		q.Stop()
+	}
 	return nil
 }
 
